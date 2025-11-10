@@ -1,17 +1,31 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
 import psycopg2
 import os
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "super_secret_key_change_me"
+
+app.secret_key = os.getenv("SECRET_KEY")
 
 # --- Database connection ---
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_NAME = os.getenv("DB_NAME", "salaogestor")
-DB_USER = os.getenv("DB_USER", "postgres")
-DB_PASS = os.getenv("DB_PASS", "postgres")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASS = os.getenv("DB_PASS")
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 
 
 def get_db_connection():
@@ -31,12 +45,13 @@ login_manager.login_view = "index"  # redirect to login if not authenticated
 # --- User model for Flask-Login ---
 
 
-class User(UserMixin):
-    def __init__(self, id, email, password_hash, role):
-        self.id = id
-        self.email = email
-        self.password_hash = password_hash
-        self.role = role
+class User(db.Model, UserMixin):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    role = db.Column(db.String(50), nullable=False, default='employee')
 
 
 @login_manager.user_loader

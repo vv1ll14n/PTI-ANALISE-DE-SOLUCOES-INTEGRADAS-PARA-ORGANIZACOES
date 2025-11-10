@@ -1,2 +1,6 @@
 Flask
 psycopg2-binary
+Flask-Login
+Flask-Bcrypt
+python-dotenv
+flask-sqlalchemy
