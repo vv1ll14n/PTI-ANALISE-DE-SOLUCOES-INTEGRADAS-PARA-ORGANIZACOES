@@ -49,9 +49,15 @@ class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(50), nullable=False, default='employee')
+
+    def __init__(self, id, email, password_hash, role):
+        self.id = id
+        self.email = email
+        self.password_hash = password_hash
+        self.role = role
 
 
 @login_manager.user_loader
@@ -64,7 +70,7 @@ def load_user(user_id):
     cur.close()
     conn.close()
     if user:
-        return User(*user)
+        User(*user)
     return None
 
 # --- Routes ---
@@ -92,10 +98,15 @@ def login():
         user = User(*user_data)
         login_user(user)
         flash(f"Bem-vindo, {user.email} ({user.role})!", "success")
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("agenda"))
     else:
         flash("Email ou senha incorretos.", "error")
         return redirect(url_for("index"))
+
+
+@app.route("/agenda")
+def agenda():
+    return render_template("agenda-salao.html")
 
 
 @app.route("/dashboard")
