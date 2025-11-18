@@ -78,11 +78,13 @@ def load_user(user_id):
 
 @app.route("/")
 def index():
-    return render_template("login.html")
+    return render_template("index.html")
 
-
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
+
+    if request.method == "GET":
+        return render_template("login.html")
     email = request.form.get("email")
     senha = request.form.get("senha")
 
