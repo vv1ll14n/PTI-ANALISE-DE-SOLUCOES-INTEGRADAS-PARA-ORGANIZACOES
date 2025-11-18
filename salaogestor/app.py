@@ -157,6 +157,50 @@ def register():
 
     return render_template("register.html")
 
+@app.route("/reset_simples", methods=["GET", "POST"])
+def reset_simples():
+    # chave de troca de senha
+    CHAVE_MESTRA = "admin123" 
+
+    if request.method == "POST":
+        email = request.form.get("email")
+        nova_senha = request.form.get("nova_senha")
+        chave_digitada = request.form.get("chave_seguranca")
+
+        # 1. Verifica se a chave de segurança está correta
+        if chave_digitada != CHAVE_MESTRA:
+            flash("Chave de segurança incorreta! Peça ao administrador.", "error")
+            return redirect(url_for("reset_simples"))
+
+        # 2. Verifica se preencheu tudo
+        if not email or not nova_senha:
+            flash("Preencha todos os campos.")
+            return redirect(url_for("reset_simples"))
+
+        # 3. Atualiza a senha no banco
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Primeiro verificamos se o email existe
+        cur.execute("SELECT id FROM users WHERE email = %s;", (email,))
+        if not cur.fetchone():
+            flash("E-mail não encontrado.", "error")
+            cur.close()
+            conn.close()
+            return redirect(url_for("reset_simples"))
+
+        # Se existe, atualizamos
+        senha_hash = generate_password_hash(nova_senha)
+        cur.execute("UPDATE users SET password_hash = %s WHERE email = %s;", (senha_hash, email))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        flash("Senha alterada com sucesso! Faça login.", "success")
+        return redirect(url_for("index"))
+
+    return render_template("reset_simples.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

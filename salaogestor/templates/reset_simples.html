@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperar Senha</title>
+</head>
+<body>
+    <h1>Recuperação de Senha</h1>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <p>
+            <label>Seu E-mail:</label><br>
+            <input type="email" name="email" required>
+        </p>
+        <p>
+            <label>Nova Senha:</label><br>
+            <input type="password" name="nova_senha" required>
+        </p>
+        <p>
+            <label>Chave de Segurança (Admin):</label><br>
+            <input type="password" name="chave_seguranca" placeholder="Peça ao gerente" required>
+        </p>
+        <button type="submit">Trocar Senha</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('index') }}">Voltar ao Login</a>
+</body>
+</html>
