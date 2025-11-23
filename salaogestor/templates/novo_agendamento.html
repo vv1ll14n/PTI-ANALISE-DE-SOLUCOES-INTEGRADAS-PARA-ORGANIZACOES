@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Agendamento - SalãoGestor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background-color: #fff;
+            padding: 24px 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            width: 380px;
+        }
+        h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            text-align: center;
+            color: #4e73df;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #4e5d6c;
+        }
+        select, input {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #ced4da;
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 18px;
+        }
+        .btn {
+            border: none;
+            border-radius: 18px;
+            padding: 7px 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background-color: #1cc88a;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: #17a673;
+        }
+        .btn-secondary {
+            background-color: #e3e6f0;
+            color: #4e5d6c;
+        }
+        .btn-secondary:hover {
+            background-color: #d1d3e2;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Novo Agendamento</h2>
+        <form method="POST">
+            <label for="cliente_id">Cliente</label>
+            <select name="cliente_id" id="cliente_id" required>
+                <option value="">Selecione...</option>
+                {% for c in clientes %}
+                    <option value="{{ c[0] }}">{{ c[1] }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="servico">Serviço</label>
+            <input type="text" name="servico" id="servico" required>
+
+            <label for="data">Data</label>
+            <input type="date" name="data" id="data" required>
+
+            <label for="hora">Hora</label>
+            <input type="time" name="hora" id="hora" required>
+
+            <div class="actions">
+                <button type="button" class="btn btn-secondary"
+                        onclick="window.location.href='{{ url_for('agenda_salao') }}'">
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

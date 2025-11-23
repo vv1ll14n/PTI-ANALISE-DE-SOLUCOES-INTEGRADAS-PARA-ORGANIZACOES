@@ -214,3 +214,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+salaogestor/templates/dashboard.html
+
+salaogestor/templates/caixa.html
+
+salaogestor/templates/dashboard.html
