@@ -72,16 +72,24 @@ class User(db.Model, UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute(
-        "SELECT id, email, password_hash, role FROM users WHERE id = %s;", (user_id,))
-    user = cur.fetchone()
-    cur.close()
-    conn.close()
-    if user:
-        return User(*user)  # ✅ RETORNA o objeto User
-    return None
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT id, email, password_hash, role FROM users WHERE id = %s;", (user_id,))
+        user = cur.fetchone()
+        if user:
+            # Garante que os dados do banco são convertidos para um objeto User
+            return User(*user) 
+        return None
+    except Exception as e:
+        print(f"Erro ao carregar usuário: {e}")
+        return None
+    finally:
+        if cur: cur.close()
+        if conn: conn.close()
 
 # --- Routes ---
 
