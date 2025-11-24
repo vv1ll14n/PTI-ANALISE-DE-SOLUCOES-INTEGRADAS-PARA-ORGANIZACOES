@@ -58,7 +58,7 @@ def get_db_connection():
         port=DB_PORT if DB_PORT else 5432,
         sslmode='require'
     )
-
+#teste
 
 # --- Flask-Login setup ---
 login_manager = LoginManager()
