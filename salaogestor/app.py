@@ -47,11 +47,24 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 
 
 def get_db_connection():
+    # Recarrega as credenciais na hora da execução para garantir
+    host = os.getenv("DB_HOST")
+    user = os.getenv("DB_USER")
+    pasw = os.getenv("DB_PASS")
+    name = os.getenv("DB_NAME")
+    
+    # DEBUG: Isso vai aparecer nos logs da Vercel se der erro
+    print(f"Tentando conectar... Host: {host}, User: {user}, DB: {name}")
+
+    if not host:
+        raise ValueError("ERRO CRÍTICO: DB_HOST não foi encontrado nas variáveis de ambiente!")
+
     return psycopg2.connect(
-        host=DB_HOST,
-        database=DB_NAME,
-        user=DB_USER,
-        password=DB_PASS
+        host=host,
+        database=name,
+        user=user,
+        password=pasw,
+        port=os.getenv("DB_PORT", "5432") # Usa 5432 se a porta for None
     )
 
 
