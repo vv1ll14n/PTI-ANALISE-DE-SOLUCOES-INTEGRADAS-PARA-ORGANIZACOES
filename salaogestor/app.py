@@ -20,50 +20,43 @@ def admin_required(f):
 load_dotenv()
 
 app = Flask(__name__)
-
 app.secret_key = os.getenv("SECRET_KEY")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://neondb_owner:npg_tIHKv5kW7qBr@ep-green-meadow-ac8gcex2-pooler.sa-east-1.aws.neon.tech/salaogestor?sslmode=require&channel_binding=require'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
-# --- Database connection ---
+# --- 1. CARREGAR VARIÁVEIS ---
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 
-# --- Correção 1: Tratamento da Porta ---
+# --- 2. TRATAR A PORTA ---
 if DB_PORT:
     port_str = f":{DB_PORT}"
 else:
     port_str = "" 
 
-# --- Correção 2: Adicionar ?sslmode=require na URI do SQLAlchemy ---
-# Sem isso, o Neon recusa a conexão ou dá erro de certificado.
+# --- 3. CONFIGURAR A URI (COM SSL) ---
+# AVISO: Nunca deixe a string 'hardcoded' aqui. Use apenas as variáveis.
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}{port_str}/{DB_NAME}?sslmode=require'
 )
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# --- 4. INICIAR O BANCO (SÓ AGORA!) ---
 db = SQLAlchemy(app)
 
-# --- Correção 3: Adicionar sslmode='require' no psycopg2 ---
+# --- 5. FUNÇÃO AUXILIAR (Para partes legadas/psycopg2) ---
 def get_db_connection():
-    # Verifica se a senha existe antes de tentar conectar (ajuda no debug)
     if not DB_PASS:
-        print("ERRO CRÍTICO: A variável DB_PASS está vazia ou não foi lida!")
+        print("ERRO CRÍTICO: DB_PASS vazio!")
     
     return psycopg2.connect(
         host=DB_HOST,
         database=DB_NAME,
         user=DB_USER,
         password=DB_PASS,
-        port=DB_PORT if DB_PORT else 5432, # Garante uma porta padrão se for None
-        sslmode='require' # <--- OBRIGATÓRIO PARA NEON
+        port=DB_PORT if DB_PORT else 5432,
+        sslmode='require'
     )
 
 
