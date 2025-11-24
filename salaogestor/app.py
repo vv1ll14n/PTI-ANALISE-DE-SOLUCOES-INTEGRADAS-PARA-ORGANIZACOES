@@ -35,36 +35,35 @@ DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 
-
+# --- Correção 1: Tratamento da Porta ---
 if DB_PORT:
     port_str = f":{DB_PORT}"
 else:
     port_str = "" 
 
+# --- Correção 2: Adicionar ?sslmode=require na URI do SQLAlchemy ---
+# Sem isso, o Neon recusa a conexão ou dá erro de certificado.
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}{port_str}/{DB_NAME}'
+    f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}{port_str}/{DB_NAME}?sslmode=require'
 )
 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+db = SQLAlchemy(app)
+
+# --- Correção 3: Adicionar sslmode='require' no psycopg2 ---
 def get_db_connection():
-    # Recarrega as credenciais na hora da execução para garantir
-    host = os.getenv("DB_HOST")
-    user = os.getenv("DB_USER")
-    pasw = os.getenv("DB_PASS")
-    name = os.getenv("DB_NAME")
+    # Verifica se a senha existe antes de tentar conectar (ajuda no debug)
+    if not DB_PASS:
+        print("ERRO CRÍTICO: A variável DB_PASS está vazia ou não foi lida!")
     
-    # DEBUG: Isso vai aparecer nos logs da Vercel se der erro
-    print(f"Tentando conectar... Host: {host}, User: {user}, DB: {name}")
-
-    if not host:
-        raise ValueError("ERRO CRÍTICO: DB_HOST não foi encontrado nas variáveis de ambiente!")
-
     return psycopg2.connect(
-        host=host,
-        database=name,
-        user=user,
-        password=pasw,
-        port=os.getenv("DB_PORT", "5432") # Usa 5432 se a porta for None
+        host=DB_HOST,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASS,
+        port=DB_PORT if DB_PORT else 5432, # Garante uma porta padrão se for None
+        sslmode='require' # <--- OBRIGATÓRIO PARA NEON
     )
 
 
