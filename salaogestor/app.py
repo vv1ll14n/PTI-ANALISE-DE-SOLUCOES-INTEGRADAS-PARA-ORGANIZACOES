@@ -160,23 +160,35 @@ def register():
             flash("Preencha todos os campos.")
             return redirect(url_for("register"))
 
-        senha_hash = generate_password_hash(senha)
-        conn = get_db_connection()
-        cur = conn.cursor()
-        try:
-            cur.execute(
-                "INSERT INTO users (email, password_hash, role) VALUES (%s, %s, %s);",
-                (email, senha_hash, role)
-            )
-            conn.commit()
-            flash("Cadastro realizado com sucesso!")
-        except psycopg2.errors.UniqueViolation:
+        # Verifica se já existe (usando SQLAlchemy é mais limpo)
+        if User.query.filter_by(email=email).first():
             flash("Este email já está cadastrado.")
-        finally:
-            cur.close()
-            conn.close()
+            return redirect(url_for("register"))
 
-        return redirect(url_for("index"))
+        senha_hash = generate_password_hash(senha)
+        
+        # Cria o objeto Usuário
+        # Passamos id=None porque o banco gera o ID automaticamente
+        novo_usuario = User(id=None, email=email, password_hash=senha_hash, role=role)
+        
+        try:
+            db.session.add(novo_usuario)
+            db.session.commit() # Aqui o banco cria o ID e atualiza o objeto
+            
+            # --- AQUI ESTÁ A CORREÇÃO ---
+            # 1. Loga o usuário automaticamente
+            login_user(novo_usuario)
+            
+            # 2. Mensagem de sucesso
+            flash(f"Cadastro realizado! Bem-vindo, {email}.")
+            
+            # 3. Redireciona direto para a Agenda (não volta para o login)
+            return redirect(url_for("agenda_salao"))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash("Erro ao cadastrar: " + str(e), "error")
+            return redirect(url_for("register"))
 
     return render_template("register.html")
 
