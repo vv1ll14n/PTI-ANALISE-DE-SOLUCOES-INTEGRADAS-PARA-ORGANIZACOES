@@ -23,6 +23,11 @@ app = Flask(__name__)
 
 app.secret_key = os.getenv("SECRET_KEY")
 
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://neondb_owner:npg_tIHKv5kW7qBr@ep-green-meadow-ac8gcex2-pooler.sa-east-1.aws.neon.tech/salaogestor?sslmode=require&channel_binding=require'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
 # --- Database connection ---
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
@@ -31,12 +36,14 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+if DB_PORT:
+    port_str = f":{DB_PORT}"
+else:
+    port_str = "" 
 
-db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}{port_str}/{DB_NAME}'
+)
 
 
 def get_db_connection():
