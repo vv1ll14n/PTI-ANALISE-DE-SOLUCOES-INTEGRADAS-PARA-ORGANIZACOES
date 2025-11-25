@@ -347,7 +347,10 @@ O site foi estruturado com foco na usabilidade e na comunicação eficiente, inc
 •	Consulta de preços: oferecendo transparência e praticidade na apresentação dos planos e serviços disponíveis.
 A integração dos formulários com scripts em Python garante o processamento seguro e automatizado das informações enviadas pelos usuários, além de permitir escalabilidade futura para funcionalidades mais complexas, como autenticação, geração de relatórios ou integração com bancos de dados.
 A plataforma também cumpre papel estratégico na comunicação visual do projeto, apresentando o conceito do SalãoGestor, seus diferenciais e os benefícios para salões de beleza. O design moderno, aliado à navegação intuitiva, reforça a proposta de inovação e profissionalismo, contribuindo para a credibilidade da solução junto ao público-alvo.
+
+
 Link de acesso a plataforma:  https://emanoel2511.github.io/Sal-oGestor_2025/
+
 
 <img width="945" height="634" alt="image" src="https://github.com/user-attachments/assets/452c8a24-d621-4873-8136-28cb046f5a4b" />
 
@@ -376,8 +379,26 @@ A escolha do Python se deve à sua clareza sintática, produtividade e ampla dis
 O Flask foi adotado como framework principal do backend por sua flexibilidade e simplicidade. Ele fornece os recursos essenciais para criação de rotas, tratamento de requisições HTTP, controle de sessões e integração com o banco de dados, sem impor estruturas rígidas de desenvolvimento.
 A arquitetura do sistema segue o padrão Model–View–Template (MVT), que separa a aplicação em três camadas principais. O Model define as entidades e realiza o mapeamento objeto-relacional via SQLAlchemy. A View processa as regras de negócio e retorna respostas às requisições. Já o Template, implementado com Jinja2, é responsável pela renderização dinâmica das páginas HTML. Essa estrutura garante uma aplicação organizada, escalável e de fácil manutenção.
 Também foram utilizadas extensões complementares, como Flask-Login (para autenticação e controle de usuários) e Flask-SQLAlchemy (para gerenciamento de banco de dados). Essa combinação de tecnologias oferece ao Salão Gestor uma base sólida, segura e preparada para expansão futura.
-Link do projeto hospedado: 
+
+Link do projeto hospedado: https://pti-analise-de-solucoes-integradas.vercel.app/
+
+
 https://github.com/vv1ll14n/PTI-ANALISE-DE-SOLUCOES-INTEGRADAS-PARA-ORGANIZACOES/tree/main/salaogestor/templates
+
+
+<img width="945" height="369" alt="image" src="https://github.com/user-attachments/assets/4e9b0731-00d5-4067-9301-91bac5d06f4a" />
+
+
+<img width="945" height="358" alt="image" src="https://github.com/user-attachments/assets/a1b1e070-deaf-4d23-8dfc-09bf6f6377b4" />
+
+
+<img width="945" height="358" alt="image" src="https://github.com/user-attachments/assets/056fb415-8ae3-4e57-8482-c666b4b2758a" />
+
+
+<img width="945" height="360" alt="image" src="https://github.com/user-attachments/assets/b8ad25d7-6a66-4319-8823-dcb94c602bd2" />
+
+
+<img width="945" height="402" alt="image" src="https://github.com/user-attachments/assets/e118297e-3cf6-4e63-9a2a-10ef28935f48" />
 
 
 4.1 Banco de dados.
@@ -391,7 +412,7 @@ O PostgreSQL foi utilizado para armazenar informações como cadastros de client
 
 
 
-
+<img width="945" height="480" alt="image" src="https://github.com/user-attachments/assets/4c3eac4f-e159-4e61-9af8-72958ccce199" />
 
 
 
