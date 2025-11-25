@@ -417,6 +417,9 @@ O PostgreSQL foi utilizado para armazenar informações como cadastros de client
 
 
 
+
+
+
 CONSIDERAÇÕES FINAIS
 Ao desenvolver o projeto SalãoGestor, concluímos que ele representa um avanço essencial na modernização da gestão de salões de beleza. A proposta de uma plataforma digital voltada ao controle de agenda, organização de serviços e melhoria da experiência do cliente se mostrou estratégica para atender às demandas reais do setor.
 Ao priorizar tecnologias móveis e soluções web, conseguimos ampliar o alcance da plataforma, tornando-a acessível tanto para gestores de salões quanto para profissionais autônomos e clientes finais. Essa abordagem garante versatilidade, praticidade e adaptação ao estilo de vida conectado dos usuários modernos.
